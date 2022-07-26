@@ -1,4 +1,5 @@
-﻿using DDDarchitect.Domain.DomainModel.EventDomainModel.Entitites;
+﻿using DDDarchitect.Api.Mappers;
+using DDDarchitect.Domain.DomainModel.EventDomainModel.Entitites;
 using DDDarchitect.Domain.DomainModel.EventDomainModel.Queries;
 using Microservice.Framework.Common;
 using Microservice.Framework.Domain.Commands;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DDDarchitect.Api.Controllers
@@ -37,7 +39,7 @@ namespace DDDarchitect.Api.Controllers
 
             var result = await _queryProcessor
                 .ProcessAsync(
-                new GetMultiEventQuery(catId) { Ids = ids.Select(id => new EventDomain.EventId(id)).ToList() },
+                new GetMultiEventQuery(catId) { Ids = ids.Select(id => new Domain.DomainModel.EventDomainModel.EventId(id)).ToList() },
                 CancellationToken.None);
 
             return Ok(new MapEventsToEventDtos(result.ToList().AsReadOnly()).Map());
@@ -48,7 +50,7 @@ namespace DDDarchitect.Api.Controllers
         {
             var result = await _queryProcessor
                 .ProcessAsync(
-                new GetEventQuery(new EventDomain.EventId(eventId)),
+                new GetEventQuery(new Domain.DomainModel.EventDomainModel.EventId(eventId)),
                 CancellationToken.None);
 
             return Ok(new MapEventToEventDto(result).Map());
